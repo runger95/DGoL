@@ -15,6 +15,7 @@
 /* For when I build Chunks to Parse //use universe array which holds 
 #define MAX_X_CHUNKS 1 #define MAX_Y_CHUNKS 1
 */
+#define CHUNKSPERDIM 2
 #define MAX_X_CELLS 10
 #define MAX_Y_CELLS 10
 
