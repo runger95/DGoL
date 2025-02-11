@@ -4,6 +4,7 @@ Drake's Game Of Life
 Master is main trunk
 Dev is dev branch
 
+THIS IS THE DEV BRANCH
 
 
 V0.1: Initial Upload of a CGoL
