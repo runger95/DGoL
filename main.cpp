@@ -15,9 +15,12 @@
 /* For when I build Chunks to Parse //use universe array which holds 
 #define MAX_X_CHUNKS 1 #define MAX_Y_CHUNKS 1
 */
-#define CHUNKSPERDIM 2
-#define MAX_X_CELLS 10
-#define MAX_Y_CELLS 10
+static const int CHUNKSDIMX = 2;
+static const int CHUNKSDIMY = 2;
+static const int MAX_X_CELLS = 10;
+static const int MAX_Y_CELLS = 10;
+int chunkLenX = MAX_X_CELLS/CHUNKSDIMX;
+int chunkLenY = MAX_Y_CELLS/CHUNKSDIMY;
 
 //This will change eventually.
 int arrayOdd[MAX_X_CELLS][MAX_Y_CELLS] = {
@@ -37,8 +40,8 @@ int arrayEven[MAX_X_CELLS][MAX_Y_CELLS] = {
 {0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,1,0,0,0,0},
-{0,0,0,1,0,1,0,0,0,0},
-{0,0,0,0,1,1,0,0,0,0},
+{0,0,0,0,0,1,0,0,0,0},
+{0,0,0,0,0,1,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0},
 {0,0,0,0,0,0,0,0,0,0},
@@ -104,11 +107,19 @@ int rule2DConway(int arrayCurState[MAX_X_CELLS][MAX_Y_CELLS], int i, int j){
 
 //main function which gets the array updated into it's next state.
 //it loops through all (2) dimensions and calls the rule2DConway to determine the value the cell should be.
-void gameLoop2D(int arrayCurState[MAX_X_CELLS][MAX_Y_CELLS], int arrayNextState[MAX_X_CELLS][MAX_Y_CELLS]){
-    for (int i = 0; i < MAX_X_CELLS; i++) {
-        for (int j= 0; j < MAX_Y_CELLS; j++) {
+void gameLoop2D(int arrayCurState[MAX_X_CELLS][MAX_Y_CELLS], int arrayNextState[MAX_X_CELLS][MAX_Y_CELLS]){ 
 
-            arrayNextState[i][j] = rule2DConway(arrayCurState, i, j);
+    //outerloop to iterate through Chunks
+    for (int c_x = 0; c_x < CHUNKSDIMX; c_x++) {
+        for (int c_y = 0; c_y < CHUNKSDIMY; c_y++) {
+            
+            //inner loop to iterate inside Chunk
+            //c_x*chunkLen+i is calculating offset based on which chunk
+            for (int i = 0; i < chunkLenX; i++) {
+                for (int j= 0; j < chunkLenX; j++) {
+                    arrayNextState[c_x*chunkLenX+i][c_y*chunkLenY+j] = rule2DConway(arrayCurState, c_x*chunkLenX+i, c_y*chunkLenY+j);
+                }
+            }
         }
     }
 }
@@ -143,8 +154,14 @@ int main() {
             print2DASCII(arrayOdd);
         }
         cycle++;
+        printf("\n");
+        printf("%d ", looper);
+        printf("\n");
+
         Sleep(1000); // wait 2 seconds, need to find way to link stdlib.h
         looper++;  // setting bounds for now in order to quick analuze
     }
+    printf("Done");
+
     return 0;
 }
